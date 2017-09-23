@@ -4,6 +4,7 @@ cmd:text()
 cmd:text('Options')
 -- Data input settings
 cmd:option('-inputImg', 'data/data_img.h5', 'HDF5 file with image features')
+cmd:option('-inputImg_attention', 'data/data_img_attention.h5', 'HDF5 file with image features for attention')
 cmd:option('-inputQues', 'data/visdial_data.h5', 'HDF5 file with preprocessed questions')
 cmd:option('-inputJson', 'data/visdial_params.json', 'JSON file with info and vocab')
 cmd:option('-savePath', 'checkpoints/', 'Path to save checkpoints')
@@ -50,5 +51,13 @@ if string.match(opts.encoder, 'im') then opts.useIm = true end
 
 -- check if history is to be concatenated (only for late fusion encoder)
 if string.match(opts.encoder, 'lf') then opts.concatHistory = true end
+
+opts.attention = false
+if string.match(opts.encoder, 'new') then
+	opts.useHistory = true
+	opts.useIm = true
+	opts.concatHistory = true
+	opts.attention = true
+end
 
 return opts;

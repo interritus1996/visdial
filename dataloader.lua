@@ -35,6 +35,7 @@ function dataloader:initialize(opt, subsets)
 
     print('DataLoader loading h5 file: ', opt.inputImg)
     local imgFile = hdf5.open(opt.inputImg, 'r');
+    local imgFile_attention = hdf5.open(opt.inputImg_attention, 'r');
     -- number of threads
     self.numThreads = {};
 
@@ -52,14 +53,19 @@ function dataloader:initialize(opt, subsets)
         if opt.useIm then
             print('Reading image features..')
             local imgFeats = imgFile:read('/images_'..dtype):all();
+            local imgFeats_attention = imgFile_attention:read('/images_'..dtype):all();
 
             -- Normalize the image features (if needed)
             if opt.imgNorm == 1 then
                 print('Normalizing image features..')
                 local nm = torch.sqrt(torch.sum(torch.cmul(imgFeats, imgFeats), 2));
                 imgFeats = torch.cdiv(imgFeats, nm:expandAs(imgFeats)):float();
+
+                local nm_attention = torch.sqrt(torch.sum(torch.sum(torch.cmul(imgFeats_attention,imgFeats_attention),2),3));
+                imgFeats_attention = torch.cdiv(imgFeats_attention, nm_attention:expandAs(imgFeats_attention)):float();
             end
             self[dtype..'_img_fv'] = imgFeats;
+            self[dtype..'_img_fv_attention'] = imgFeats_attention;
             -- TODO: make it 1 indexed in processing code
             -- currently zero indexed, adjust manually
             self[dtype..'_img_pos'] = quesFile:read('img_pos_'..dtype):all():long();
@@ -116,6 +122,7 @@ function dataloader:initialize(opt, subsets)
     -- done reading, close files
     quesFile:close();
     imgFile:close();
+    imgFile_attention:close();
 
     -- take desired flags/values from opt
     self.useHistory = opt.useHistory;
@@ -380,6 +387,7 @@ function dataloader.getIndexData(self, inds, params, dtype)
     if self.useIm then
         local imgInds = self[dtype..'_img_pos']:index(1, inds);
         imgFeats = self[dtype..'_img_fv']:index(1, imgInds);
+        imgFeats_attention = self[dtype..'_img_fv_attention']:index(1, imgInds);
     end
 
     -- get the answer lengths
@@ -401,6 +409,7 @@ function dataloader.getIndexData(self, inds, params, dtype)
         if history then output['hist'] = history:cuda(); end
         if caption then output['cap'] = caption:cuda(); end
         if imgFeats then output['img_feat'] = imgFeats:cuda(); end
+        if imgFeats then output['img_feat_attention'] = imgFeats_attention:cuda(); end
     else
         output['ques_fwd'] = quesFwd:contiguous();
         output['answer_in'] = answerIn:contiguous();
@@ -409,6 +418,7 @@ function dataloader.getIndexData(self, inds, params, dtype)
         if history then output['hist'] = history:contiguous(); end
         if caption then output['cap'] = caption:contiguous(); end
         if imgFeats then output['img_feat'] = imgFeats:contiguous(); end
+        if imgFeats then output['img_feat_attention'] = imgFeats_attention:contiguous(); end
     end
 
     return output;

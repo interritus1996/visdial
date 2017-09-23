@@ -14,6 +14,7 @@ cmd:text('Options')
 
 -- Data input settings
 cmd:option('-inputImg','data/data_img.h5','h5file path with image feature')
+cmd:option('-inputImg_attention', 'data/data_img_attention.h5', 'HDF5 file with image features for attention')
 cmd:option('-inputQues','data/visdial_data.h5','h5file file with preprocessed questions')
 cmd:option('-inputJson','data/visdial_params.json','json path with info and vocab')
 
@@ -65,6 +66,13 @@ if string.match(opt.encoder, 'hist') then
     opt.useHistory = true;
 end
 if string.match(opt.encoder, 'im') then opt.useIm = true; end
+
+if string.match(opt.encoder, 'new') then
+    opts.useHistory = true
+    opts.useIm = true
+    opts.concatHistory = true
+    opts.attention = true
+end
 
 ------------------------------------------------------------------------
 -- Loading dataset
