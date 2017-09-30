@@ -80,7 +80,7 @@ local batchSize = opt.batchSize
 
 local sz = #trainList
 local trainFeats
-if layerName == 'pool5' then
+if opt.layerName == 'pool5' then
     trainFeats = torch.FloatTensor(sz, 14,14,512)
 else
     trainFeats = torch.FloatTensor(sz, ndims)
@@ -103,7 +103,7 @@ end
 
 local sz = #valList
 local valFeats
-if layerName == 'pool5' then
+if opt.layerName == 'pool5' then
     valFeats = torch.FloatTensor(sz, 14,14,512)
 else
     valFeats = torch.FloatTensor(sz, ndims)
