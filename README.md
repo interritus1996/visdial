@@ -99,13 +99,13 @@ th prepro_img.lua -imageRoot /path/to/coco/images/ -gpuid 0
 
 This should generate `data/data_img.h5` containing features for COCO `train` and `val` splits corresponding to VisDial v0.9.
 
-If we want to Late Fusion model with Attention layer, then we need to extract features from `pool5` layer.
+If we want to use Late Fusion model with Attention layer, then we need to extract features from `pool5` layer.
 
 ```
 th prepro_img.lua -imageRoot /path/to/coco/images/ -gpuid 0 -layerName pool5 -imgSize 448
 ```
 
-This will store 14x14x512 features for each image and the size of `data/data_img.h5` will be nearly 47GB.
+This will store 14x14x512 features for each image in `train` and `val`, and the size of `data/data_img.h5` will be nearly 47GB.
 
 ### Training
 
