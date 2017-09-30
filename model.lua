@@ -189,17 +189,19 @@ function Model:forwardBackward(batch, onlyForward, encOutOnly)
     table.insert(inputs, batchQues)
 
     if self.params.useIm == true then
-        -- local imgFeats = batch['img_feat']
-        -- imgFeats = imgFeats:view(-1, 1, self.params.imgFeatureSize)
-        -- imgFeats = imgFeats:repeatTensor(1, self.params.maxQuesCount, 1)
-        -- imgFeats = imgFeats:view(-1, self.params.imgFeatureSize)
-        -- table.insert(inputs, imgFeats)
+        local imgFeats = batch['img_feat']
 
-        local imgFeats_attention = batch['img_feat_attention']
-        imgFeats_attention = imgFeats_attention:view(-1, 1, 14,14,512)
-        imgFeats_attention = imgFeats_attention:repeatTensor(1, self.params.maxQuesCount, 1,1,1)
-        imgFeats_attention = imgFeats_attention:view(-1, 14,14,512)
-        table.insert(inputs, imgFeats_attention)
+        if self.params.attention == true then
+            imgFeats = imgFeats:view(-1, 1, 14, 14, 512)
+            imgFeats = imgFeats:repeatTensor(1, self.params.maxQuesCount, 1, 1, 1)
+            imgFeats = imgFeats:view(-1, 14, 14, 512)
+        else
+            imgFeats = imgFeats:view(-1, 1, self.params.imgFeatureSize)
+            imgFeats = imgFeats:repeatTensor(1, self.params.maxQuesCount, 1)
+            imgFeats = imgFeats:view(-1, self.params.imgFeatureSize)
+        end
+
+        table.insert(inputs, imgFeats)
     end
 
     if self.params.useHistory == true then
@@ -280,17 +282,19 @@ function Model:retrieveBatch(batch)
     table.insert(inputs, batchQues)
 
     if self.params.useIm == true then
-        -- local imgFeats = batch['img_feat']
-        -- imgFeats = imgFeats:view(-1, 1, self.params.imgFeatureSize)
-        -- imgFeats = imgFeats:repeatTensor(1, self.params.maxQuesCount, 1)
-        -- imgFeats = imgFeats:view(-1, self.params.imgFeatureSize)
-        -- table.insert(inputs, imgFeats)
+        local imgFeats = batch['img_feat']
 
-        local imgFeats_attention = batch['img_feat_attention']
-        imgFeats_attention = imgFeats_attention:view(-1, 1, 14,14,512)
-        imgFeats_attention = imgFeats_attention:repeatTensor(1, self.params.maxQuesCount, 1,1,1)
-        imgFeats_attention = imgFeats_attention:view(-1, 14,14,512)
-        table.insert(inputs, imgFeats_attention)
+        if self.params.attention == true then
+            imgFeats = imgFeats:view(-1, 1, 14, 14, 512)
+            imgFeats = imgFeats:repeatTensor(1, self.params.maxQuesCount, 1, 1, 1)
+            imgFeats = imgFeats:view(-1, 14, 14, 512)
+        else
+            imgFeats = imgFeats:view(-1, 1, self.params.imgFeatureSize)
+            imgFeats = imgFeats:repeatTensor(1, self.params.maxQuesCount, 1)
+            imgFeats = imgFeats:view(-1, self.params.imgFeatureSize)
+        end
+
+        table.insert(inputs, imgFeats)
     end
 
     if self.params.useHistory == true then

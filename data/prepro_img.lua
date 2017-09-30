@@ -79,7 +79,12 @@ local ndims = 4096
 local batchSize = opt.batchSize
 
 local sz = #trainList
-local trainFeats = torch.FloatTensor(sz, ndims)
+local trainFeats
+if layerName == 'pool5' then
+    trainFeats = torch.FloatTensor(sz, 14,14,512)
+else
+    trainFeats = torch.FloatTensor(sz, ndims)
+end
 print(string.format('Processing %d images...', sz))
 for i = 1, sz, batchSize do
     xlua.progress(i, sz)
@@ -97,7 +102,12 @@ for i = 1, sz, batchSize do
 end
 
 local sz = #valList
-local valFeats = torch.FloatTensor(sz, ndims)
+local valFeats
+if layerName == 'pool5' then
+    valFeats = torch.FloatTensor(sz, 14,14,512)
+else
+    valFeats = torch.FloatTensor(sz, ndims)
+end
 print(string.format('Processing %d images...', sz))
 for i = 1, sz, batchSize do
     xlua.progress(i, sz)
