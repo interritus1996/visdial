@@ -123,12 +123,12 @@ function dataloader:initialize(opt, subsets)
     -- done reading, close files
     quesFile:close();
     imgFile:close();
-    imgFile_attention:close();
 
     -- take desired flags/values from opt
     self.useHistory = opt.useHistory;
     self.concatHistory = opt.concatHistory;
     self.useIm = opt.useIm;
+    self.attention = opt.attention;
     self.maxHistoryLen = opt.maxHistoryLen or 60;
 
     -- prepareDataset for training
