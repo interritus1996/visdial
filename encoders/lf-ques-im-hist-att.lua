@@ -8,7 +8,7 @@ function encoderNet.model(params)
     local outputs = {}
 
     table.insert(inputs, nn.Identity()()) -- question
-    table.insert(inputs, nn.Identity()()) -- img feats
+    table.insert(inputs, nn.Identity()()) -- img feats Bx14x14x512
     table.insert(inputs, nn.Identity()()) -- history
 
     local ques = inputs[1]
