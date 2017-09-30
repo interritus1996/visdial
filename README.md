@@ -99,6 +99,14 @@ th prepro_img.lua -imageRoot /path/to/coco/images/ -gpuid 0
 
 This should generate `data/data_img.h5` containing features for COCO `train` and `val` splits corresponding to VisDial v0.9.
 
+If we want to Late Fusion model with Attention layer, then we need to extract features from `pool5` layer.
+
+```
+th prepro_img.lua -imageRoot /path/to/coco/images/ -gpuid 0 -layerName pool5 -imgSize 448
+```
+
+This will store 14x14x512 features for each image and the size of `data/data_img.h5` will be nearly 47GB.
+
 ### Training
 
 Finally, we can get to training models! All supported encoders are in the `encoders/` folder (`lf-ques`, `lf-ques-im`, `lf-ques-hist`, `lf-ques-im-hist`, `hre-ques-hist`, `hre-ques-im-hist`, `hrea-ques-im-hist`, `mn-ques-hist`, `mn-ques-im-hist`), and decoders in the `decoders/` folder (`gen` and `disc`).
@@ -115,6 +123,12 @@ Similarly, to train a Memory Network model with question, image and history info
 
 ```
 th train.lua -encoder mn-ques-im-hist -decoder disc -gpuid 0
+```
+
+Similarly, to train a Late Fusion model with question, history and attention over image features, and discriminative decoding:
+
+```
+th train.lua -encoder lf-ques-im-hist-att -decoder disc -gpuid 0 
 ```
 
 The training script saves model snapshots at regular intervals in the `checkpoints/` folder.
