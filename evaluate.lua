@@ -61,8 +61,6 @@ if string.match(opt.encoder, 'im') then opt.useIm = true; end
 -- check if history is to be concatenated (only for late fusion encoder)
 if string.match(opt.encoder, 'lf') then opt.concatHistory = true end
 
-if string.match(opts.encoder, 'att') then opts.attention = true end
-
 ------------------------------------------------------------------------
 -- Loading dataset
 ------------------------------------------------------------------------

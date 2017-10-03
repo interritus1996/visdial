@@ -66,8 +66,6 @@ if string.match(opt.encoder, 'hist') then
 end
 if string.match(opt.encoder, 'im') then opt.useIm = true; end
 
-if string.match(opts.encoder, 'att') then opts.attention = true end
-
 ------------------------------------------------------------------------
 -- Loading dataset
 ------------------------------------------------------------------------
