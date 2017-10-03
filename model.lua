@@ -292,7 +292,6 @@ function Model:retrieveBatch(batch)
             imgFeats = imgFeats:repeatTensor(1, self.params.maxQuesCount, 1)
             imgFeats = imgFeats:view(-1, self.params.imgFeatureSize)
         end
-
         table.insert(inputs, imgFeats)
     end
 
