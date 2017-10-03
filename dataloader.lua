@@ -56,15 +56,8 @@ function dataloader:initialize(opt, subsets)
             -- Normalize the image features (if needed)
             if opt.imgNorm == 1 then
                 print('Normalizing image features..')
-
-                if opt.attention then
-                    local nm = torch.sqrt(torch.sum(torch.sum(torch.cmul(imgFeats, imgFeats), 2), 3));
-                    imgFeats = torch.cdiv(imgFeats, nm:expandAs(imgFeats)):float();
-                else
-                    local nm = torch.sqrt(torch.sum(torch.cmul(imgFeats, imgFeats), 2));
-                    imgFeats = torch.cdiv(imgFeats, nm:expandAs(imgFeats)):float();
-                end
-
+                local nm = torch.sqrt(torch.sum(torch.cmul(imgFeats, imgFeats), 2));
+                imgFeats = torch.cdiv(imgFeats, nm:expandAs(imgFeats)):float();
             end
             self[dtype..'_img_fv'] = imgFeats;
             -- TODO: make it 1 indexed in processing code
@@ -128,7 +121,6 @@ function dataloader:initialize(opt, subsets)
     self.useHistory = opt.useHistory;
     self.concatHistory = opt.concatHistory;
     self.useIm = opt.useIm;
-    self.attention = opt.attention;
     self.maxHistoryLen = opt.maxHistoryLen or 60;
 
     -- prepareDataset for training
