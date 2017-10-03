@@ -190,8 +190,8 @@ function Model:forwardBackward(batch, onlyForward, encOutOnly)
 
     if self.params.useIm == true then
         local imgFeats = batch['img_feat']
-
-        if self.params.attention == true then
+        -- if attention, then conv layer features
+        if string.match(self.params.encoder, 'att') then
             imgFeats = imgFeats:view(-1, 1, 14, 14, 512)
             imgFeats = imgFeats:repeatTensor(1, self.params.maxQuesCount, 1, 1, 1)
             imgFeats = imgFeats:view(-1, 14, 14, 512)
@@ -200,7 +200,6 @@ function Model:forwardBackward(batch, onlyForward, encOutOnly)
             imgFeats = imgFeats:repeatTensor(1, self.params.maxQuesCount, 1)
             imgFeats = imgFeats:view(-1, self.params.imgFeatureSize)
         end
-
         table.insert(inputs, imgFeats)
     end
 
@@ -283,8 +282,8 @@ function Model:retrieveBatch(batch)
 
     if self.params.useIm == true then
         local imgFeats = batch['img_feat']
-
-        if self.params.attention == true then
+        -- if attention, then conv layer features
+        if string.match(self.params.encoder, 'att') then
             imgFeats = imgFeats:view(-1, 1, 14, 14, 512)
             imgFeats = imgFeats:repeatTensor(1, self.params.maxQuesCount, 1, 1, 1)
             imgFeats = imgFeats:view(-1, 14, 14, 512)
