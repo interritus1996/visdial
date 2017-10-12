@@ -67,6 +67,9 @@ print(string.format('\n%d iter per epoch.', modelParams.numIterPerEpoch));
 require 'model'
 local model = Model(modelParams);
 
+-- copy the weights from loaded model
+model.wrapperW:copy(savedModel.modelW);
+
 ------------------------------------------------------------------------
 -- Training
 ------------------------------------------------------------------------
