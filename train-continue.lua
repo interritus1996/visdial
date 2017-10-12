@@ -6,16 +6,23 @@ require 'rnn'
 -- Input arguments and options
 ------------------------------------------------------------------------
 local opt = require 'opts';
-print(opt)
+--print(opt)
 
 -- seed for reproducibility
 torch.manualSeed(1234);
 
+--opt.loadPath = "checkpoints/model-10-9-2017-18:39:40-lf-att-ques-im-hist-disc/model_epoch_15.t7"
+--local savedModel = torch.load(opt.loadPath)
+
+--local modelParams = savedModel.modelParams;
+--modelParams.learningRate = opt.learningRate;
+
+--print(modelParams)
 ------------------------------------------------------------------------
 -- Loading dataset
 ------------------------------------------------------------------------
 local dataloader = dofile('dataloader.lua')
-dataloader:initialize(opt, {'train','val'});
+dataloader:initialize(opt, {'train', 'val'});
 collectgarbage();
 
 -- set default tensor based on gpu usage
@@ -34,14 +41,14 @@ end
 -- Setting model parameters
 ------------------------------------------------------------------------
 -- transfer all options to model
-local modelParams = opt;
+opt.loadPath = "checkpoints/model-10-9-2017-18:39:40-lf-att-ques-im-hist-disc/model_epoch_15.t7"
+local savedModel = torch.load(opt.loadPath)
 
--- transfer parameters from dataloader to model
-paramNames = {'numTrainThreads', 'numTestThreads', 'numValThreads',
-                'vocabSize', 'maxQuesCount', 'maxQuesLen', 'maxAnsLen'};
-for _, value in pairs(paramNames) do
-    modelParams[value] = dataloader[value];
-end
+local modelParams = savedModel.modelParams;
+modelParams.learningRate = opt.learningRate;
+
+--print(opt)
+print(modelParams)
 
 -- path to save the model
 local modelPath = opt.savePath
@@ -67,7 +74,7 @@ print('Training..')
 collectgarbage()
 
 runningLoss = 0;
-for iter = 1, modelParams.numEpochs * modelParams.numIterPerEpoch do
+for iter = 49681, modelParams.numEpochs * modelParams.numIterPerEpoch do
     -- forward and backward propagation
     model:trainIteration(dataloader);
 

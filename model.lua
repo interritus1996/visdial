@@ -145,7 +145,8 @@ function Model:retrieve(dataloader, dtype)
 
     local curLoss = 0;
     local startId = 1;
-    local numThreads = dataloader.numThreads[dtype];
+ --   local numThreads = dataloader.numThreads[dtype];
+    local numThreads = math.floor(dataloader.numThreads[dtype]/self.params.batchSize)*self.params.batchSize;
     print('numThreads', numThreads)
 
     self.params.numOptions = 100;
@@ -165,6 +166,7 @@ function Model:retrieve(dataloader, dtype)
         -- Call retrieve function for specific model, and store ranks
         ranks[{{startId, nextStartId - 1}, {}}] = self:retrieveBatch(batch);
         startId = nextStartId;
+--	print(startId)
     end
 
     print(string.format('\n%s - Retrieval:', dtype))

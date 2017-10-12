@@ -135,13 +135,38 @@ function utils.processRanks(ranks)
     end
 
     ------------------------------------------------
-    print(string.format('\tNo. questions: %d', numQues))
-    print(string.format('\tr@1: %f', torch.sum(torch.le(ranks, 1))/numQues))
-    print(string.format('\tr@5: %f', torch.sum(torch.le(ranks, 5))/numQues))
-    print(string.format('\tr@10: %f', torch.sum(torch.le(ranks, 10))/numQues))
-    print(string.format('\tmedianR: %f', torch.median(ranks:view(-1))[1]))
-    print(string.format('\tmeanR: %f', torch.mean(ranks)))
-    print(string.format('\tmeanRR: %f', torch.mean(ranks:cinv())))
+    a = numQues
+    b = torch.sum(torch.le(ranks, 1))/numQues
+    c = torch.sum(torch.le(ranks, 5))/numQues
+    d = torch.sum(torch.le(ranks, 10))/numQues
+    e = torch.median(ranks:view(-1))[1]
+    f = torch.mean(ranks)
+    g = torch.mean(ranks:cinv())
+
+    file = io.open("val_acc.csv","a")
+    file:write(a)
+    file:write(',')
+    file:write(b)
+    file:write(',')
+    file:write(c)
+    file:write(',')
+    file:write(d)
+    file:write(',')
+    file:write(e)
+    file:write(',')
+    file:write(f)
+    file:write(',')
+    file:write(g)
+    file:write('\n')
+    file:close()
+
+    print(string.format('\tNo. questions: %d', a))
+    print(string.format('\tr@1: %f', b))
+    print(string.format('\tr@5: %f', c))
+    print(string.format('\tr@10: %f', d))
+    print(string.format('\tmedianR: %f', e))
+    print(string.format('\tmeanR: %f', f))
+    print(string.format('\tmeanRR: %f', g))
 end
 
 return utils;
